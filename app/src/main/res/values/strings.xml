@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">BookProject</string>
+
+    <string name="label_author">저자</string>
+    <string name="label_publisher">출판</string>
+    <string name="label_publish_date">발행</string>
+
+    <string name="hint_search_book">책이름을 입력해주세요.</string>
+</resources>

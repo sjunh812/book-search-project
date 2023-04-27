@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="book"
+            type="org.sjhstudio.flow.bookproject.domain.Book" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:padding="15dp">
+
+        <ImageView
+            android:id="@+id/iv_book"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="centerInside"
+            app:imageUrl="@{book.image}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+<!--        <ImageView-->
+<!--            android:id="@+id/iv_arrow"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:padding="5dp"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            app:arrowImage="@{book.isExpand}"-->
+<!--            app:layout_constraintTop_toTopOf="@id/tv_title"-->
+<!--            app:layout_constraintBottom_toBottomOf="@id/tv_title"-->
+<!--            app:layout_constraintStart_toEndOf="@id/tv_title"-->
+<!--            app:layout_constraintWidth="wrap_content"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"/>-->
+
+        <TextView
+            android:id="@+id/tv_title"
+            style="@style/TextAppearance.SubTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@{book.title}"
+            app:layout_constraintBottom_toTopOf="@id/tv_author"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iv_book"
+            app:layout_constraintTop_toTopOf="@id/iv_book"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="책 이름" />
+
+        <TextView
+            android:id="@+id/tv_author_label"
+            style="@style/TextAppearance.Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_author"
+            app:layout_constraintBottom_toBottomOf="@id/tv_author"
+            app:layout_constraintStart_toStartOf="@id/tv_title"
+            app:layout_constraintTop_toTopOf="@id/tv_author" />
+
+        <TextView
+            android:id="@+id/tv_author"
+            style="@style/TextAppearance.Body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:text="@{book.author}"
+            app:layout_constraintBottom_toTopOf="@id/tv_publish_date"
+            app:layout_constraintStart_toEndOf="@id/tv_author_label"
+            app:layout_constraintTop_toBottomOf="@id/tv_title"
+            app:layout_constraintWidth_max="100dp"
+            tools:text="홍길동" />
+
+        <TextView
+            android:id="@+id/tv_publisher_label"
+            style="@style/TextAppearance.Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/label_publisher"
+            app:layout_constraintBottom_toBottomOf="@id/tv_author"
+            app:layout_constraintStart_toEndOf="@id/tv_author"
+            app:layout_constraintTop_toTopOf="@id/tv_author" />
+
+        <TextView
+            android:id="@+id/tv_publisher"
+            style="@style/TextAppearance.Body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@{book.publisher}"
+            app:layout_constraintBottom_toBottomOf="@id/tv_publisher_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toEndOf="@id/tv_publisher_label"
+            app:layout_constraintTop_toTopOf="@id/tv_publisher_label"
+            app:layout_constraintWidth_max="100dp"
+            tools:text="출판사" />
+
+        <TextView
+            android:id="@+id/tv_publish_date_label"
+            style="@style/TextAppearance.Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_publish_date"
+            app:layout_constraintBottom_toBottomOf="@id/tv_publish_date"
+            app:layout_constraintStart_toStartOf="@id/tv_title"
+            app:layout_constraintTop_toTopOf="@id/tv_publish_date" />
+
+        <TextView
+            android:id="@+id/tv_publish_date"
+            style="@style/TextAppearance.Body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="2dp"
+            app:layout_constraintBottom_toBottomOf="@id/iv_book"
+            app:layout_constraintStart_toEndOf="@id/tv_publish_date_label"
+            app:layout_constraintTop_toBottomOf="@id/tv_author"
+            app:publishDate="@{book.publishDate}"
+            tools:text="2020.08.05" />
+
+        <ImageView
+            android:id="@+id/iv_bookmark"
+            android:layout_width="wrap_content"
+            android:padding="5dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_bookmark_border_24"
+            app:layout_constraintBottom_toTopOf="@id/barrier"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="iv_book, tv_publish_date" />
+
+        <TextView
+            android:id="@+id/tv_description"
+            style="@style/TextAppearance.Description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@{book.description}"
+            app:descriptionVisibility="@{book.isExpand}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/barrier"
+            tools:text="책 설명입니다." />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
