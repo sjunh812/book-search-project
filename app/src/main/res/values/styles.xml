@@ -12,7 +12,13 @@
         <item name="fontFamily">@font/pretendard_medium</item>
     </style>
 
-    <style name="TextAppearance.Body" parent="TextAppearance.MaterialComponents.Body2">
+    <style name="TextAppearance.Body1" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="fontFamily">@font/pretendard_regular</item>
+    </style>
+
+    <style name="TextAppearance.Body2" parent="TextAppearance.MaterialComponents.Body2">
         <item name="android:textSize">13sp</item>
         <item name="android:textColor">@color/gray_80</item>
         <item name="android:letterSpacing">0</item>

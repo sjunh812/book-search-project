@@ -1,4 +1,4 @@
-package org.sjhstudio.flow.bookproject.domain
+package org.sjhstudio.flow.bookproject.domain.model
 
 data class BookList(
     val query: String,
@@ -17,5 +17,5 @@ data class Book(
     val publishDate: String,
     val isbn: String,
     val description: String,
-    var isExpand: Boolean = false
+    var isExpand: Boolean = false   // 상세보기 여부
 )

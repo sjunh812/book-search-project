@@ -1,6 +1,8 @@
 <resources>
-    <string name="app_name">BookProject</string>
+    <string name="app_name">BookSearchProject</string>
 
+    <string name="label_search">검색</string>
+    <string name="label_bookmark">북마크</string>
     <string name="label_author">저자</string>
     <string name="label_publisher">출판</string>
     <string name="label_publish_date">발행</string>

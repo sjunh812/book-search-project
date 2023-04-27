@@ -1,7 +1,6 @@
 package org.sjhstudio.flow.bookproject.presentation.base
 
 // out : read only
-// int :  write only
 sealed class UiState<out T> {
     object Loading : UiState<Nothing>()
     data class Success<T>(val data: T) : UiState<T>()

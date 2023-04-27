@@ -1,5 +1,6 @@
 package org.sjhstudio.flow.bookproject.presentation.ui.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -8,9 +9,8 @@ import kotlinx.coroutines.launch
 import org.sjhstudio.flow.bookproject.data.exception.ClientErrorException
 import org.sjhstudio.flow.bookproject.data.exception.EmptyBodyException
 import org.sjhstudio.flow.bookproject.data.exception.NetworkErrorException
-import org.sjhstudio.flow.bookproject.domain.Book
-import org.sjhstudio.flow.bookproject.domain.BookList
-import org.sjhstudio.flow.bookproject.domain.BookRepository
+import org.sjhstudio.flow.bookproject.domain.model.BookList
+import org.sjhstudio.flow.bookproject.domain.repository.BookRepository
 import org.sjhstudio.flow.bookproject.presentation.base.UiState
 import javax.inject.Inject
 
@@ -25,14 +25,18 @@ class MainViewModel @Inject constructor(
     private var _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage = _errorMessage.asStateFlow()
 
-    var lastBookList: BookList? = null
+    var lastBookList: BookList? = null  // 마지막 검색결과
+
+    companion object {
+        private val LOG = "MainViewModel"
+    }
 
     init {
-        // DB 데이터 동기화
+        // todo. DB 호출
     }
 
     fun searchBook(query: String, start: Int) = viewModelScope.launch {
-        println("xxx query : $query, start : $start")
+        Log.e(LOG, "query : $query, start : $start")
         bookRepository.getBookList(query, start)
             .onStart { emit(UiState.Loading) }
             .onCompletion { }

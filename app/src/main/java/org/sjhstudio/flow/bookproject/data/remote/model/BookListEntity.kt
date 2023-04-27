@@ -2,8 +2,8 @@ package org.sjhstudio.flow.bookproject.data.remote.model
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import org.sjhstudio.flow.bookproject.domain.Book
-import org.sjhstudio.flow.bookproject.domain.BookList
+import org.sjhstudio.flow.bookproject.domain.model.Book
+import org.sjhstudio.flow.bookproject.domain.model.BookList
 
 @JsonClass(generateAdapter = true)
 data class BookListEntity(

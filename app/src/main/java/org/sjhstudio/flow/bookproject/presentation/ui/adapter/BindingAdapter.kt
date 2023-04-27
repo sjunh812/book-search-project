@@ -1,10 +1,12 @@
 package org.sjhstudio.flow.bookproject.presentation.ui.adapter
 
+import android.text.Html
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
+import org.junit.runner.Description
 import org.sjhstudio.flow.bookproject.R
 import org.sjhstudio.flow.bookproject.presentation.util.newDateFormat
 import org.sjhstudio.flow.bookproject.presentation.util.originDateFormat
@@ -25,12 +27,14 @@ fun TextView.bindPublishDate(date: String?) {
     }
 }
 
-@BindingAdapter("arrowImage")
-fun ImageView.bindArrowImage(isExpand: Boolean) {
-    setImageResource(if (isExpand) R.drawable.ic_arrow_up_24 else R.drawable.ic_arrow_down_24)
-}
-
 @BindingAdapter("descriptionVisibility")
 fun TextView.bindDescriptionVisibility(isExpand: Boolean) {
     isVisible = isExpand
+}
+
+@BindingAdapter("description")
+fun TextView.bindDescription(description: String?) {
+    if (!description.isNullOrEmpty()) {
+        text = Html.fromHtml(description, Html.FROM_HTML_MODE_LEGACY)
+    }
 }

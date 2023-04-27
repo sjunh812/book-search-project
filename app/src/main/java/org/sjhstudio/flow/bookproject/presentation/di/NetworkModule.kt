@@ -35,6 +35,7 @@ object NetworkModule {
         val moshi = Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
             .build()
+
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
@@ -51,6 +52,7 @@ class HeaderInterceptor : Interceptor {
                 .addHeader("X-Naver-Client-Id", NAVER_CLIENT_ID)
                 .addHeader("X-Naver-Client-Secret", NAVER_CLIENT_SECRET)
                 .build()
+
             proceed(newRequest)
         }
     }

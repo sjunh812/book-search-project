@@ -19,8 +19,7 @@ class BookDataSourceImpl @Inject constructor(
         val response = bookService.getBookList(query, start)
 
         if (response.isSuccessful) {
-            return response.body()
-                ?: throw EmptyBodyException("[${response.code()}] : ${response.raw()}")
+            return response.body() ?: throw EmptyBodyException("[${response.code()}] : ${response.raw()}")
         } else {
             throw NetworkErrorException("[${response.code()}] : ${response.raw()}")
         }

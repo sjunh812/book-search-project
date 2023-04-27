@@ -6,14 +6,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.sjhstudio.flow.bookproject.databinding.ItemBookBinding
-import org.sjhstudio.flow.bookproject.domain.Book
+import org.sjhstudio.flow.bookproject.domain.model.Book
 
 class BookAdapter : ListAdapter<Book, BookAdapter.BookViewHolder>(diffCallback) {
 
     companion object {
         private val diffCallback = object : DiffUtil.ItemCallback<Book>() {
             override fun areItemsTheSame(oldItem: Book, newItem: Book): Boolean {
-                return oldItem.isbn == newItem.isbn
+                return oldItem.isbn == newItem.isbn && oldItem.title == newItem.title
             }
 
             override fun areContentsTheSame(oldItem: Book, newItem: Book): Boolean {
@@ -22,8 +22,9 @@ class BookAdapter : ListAdapter<Book, BookAdapter.BookViewHolder>(diffCallback) 
         }
     }
 
-    inner class BookViewHolder(private val binding: ItemBookBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    inner class BookViewHolder(
+        private val binding: ItemBookBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         init {
             itemView.setOnClickListener {
@@ -31,8 +32,9 @@ class BookAdapter : ListAdapter<Book, BookAdapter.BookViewHolder>(diffCallback) 
                     ?.let { position ->
                         val book = getItem(position)
                         val isExpand = book.isExpand
+
                         book.isExpand = !isExpand
-                        notifyItemChanged(position, 2)
+                        notifyItemChanged(position)
                     }
             }
         }

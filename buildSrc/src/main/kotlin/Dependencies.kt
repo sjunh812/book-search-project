@@ -18,11 +18,6 @@ object Version {
 }
 
 object Library {
-    object Kotlin {
-        const val SDK = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.21"
-        const val COROUTINE = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1"
-    }
-
     object AndroidX {
         const val CORE = "androidx.core:core-ktx:${Version.CORE}"
         const val APPCOMPAT = "androidx.appcompat:appcompat:${Version.APPCOMPAT}"
