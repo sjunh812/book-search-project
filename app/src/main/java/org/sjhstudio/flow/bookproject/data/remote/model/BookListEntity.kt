@@ -4,6 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.sjhstudio.flow.bookproject.domain.model.Book
 import org.sjhstudio.flow.bookproject.domain.model.BookList
+import org.sjhstudio.flow.bookproject.domain.model.Bookmark
 
 @JsonClass(generateAdapter = true)
 data class BookListEntity(
@@ -14,7 +15,7 @@ data class BookListEntity(
     @Json(name = "items") val items: List<BookEntity>
 ) {
 
-    fun toBookList(query: String): BookList {
+    fun toBookList(query: String, bookmarkList: List<Bookmark>): BookList {
         return BookList(
             query = query,
             total = total,
@@ -23,13 +24,17 @@ data class BookListEntity(
             books = items.map { entity ->
                 Book(
                     title = entity.title,
+                    link = entity.link,
                     image = entity.image,
                     author = entity.author,
                     discount = entity.discount,
                     publisher = entity.publisher,
                     publishDate = entity.publishDate,
                     isbn = entity.isbn,
-                    description = entity.description
+                    description = entity.description,
+                    isBookmark = bookmarkList.any { bookmark ->
+                        bookmark.title == entity.title && bookmark.isbn == entity.isbn
+                    }
                 )
             }
         )

@@ -1,9 +1,9 @@
 package org.sjhstudio.flow.bookproject.data.remote.source
 
-import org.sjhstudio.flow.bookproject.data.exception.EmptyBodyException
-import org.sjhstudio.flow.bookproject.data.exception.NetworkErrorException
 import org.sjhstudio.flow.bookproject.data.remote.api.BookService
 import org.sjhstudio.flow.bookproject.data.remote.model.BookListEntity
+import org.sjhstudio.flow.bookproject.presentation.exception.EmptyBodyException
+import org.sjhstudio.flow.bookproject.presentation.exception.NetworkErrorException
 import javax.inject.Inject
 
 interface BookDataSource {
@@ -19,7 +19,8 @@ class BookDataSourceImpl @Inject constructor(
         val response = bookService.getBookList(query, start)
 
         if (response.isSuccessful) {
-            return response.body() ?: throw EmptyBodyException("[${response.code()}] : ${response.raw()}")
+            return response.body()
+                ?: throw EmptyBodyException("[${response.code()}] : ${response.raw()}")
         } else {
             throw NetworkErrorException("[${response.code()}] : ${response.raw()}")
         }

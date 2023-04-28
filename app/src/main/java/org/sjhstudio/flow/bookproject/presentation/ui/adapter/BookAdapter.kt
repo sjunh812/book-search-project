@@ -5,10 +5,23 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import org.sjhstudio.flow.bookproject.R
 import org.sjhstudio.flow.bookproject.databinding.ItemBookBinding
 import org.sjhstudio.flow.bookproject.domain.model.Book
+import org.sjhstudio.flow.bookproject.presentation.util.click
 
-class BookAdapter : ListAdapter<Book, BookAdapter.BookViewHolder>(diffCallback) {
+class BookAdapter(
+    private val onClickBook: (book: Book) -> Unit,
+    private val insertBookMark: (book: Book) -> Unit,
+    private val deleteBookmark: (book: Book) -> Unit
+) : ListAdapter<Book, BookAdapter.BookViewHolder>(diffCallback) {
 
     companion object {
         private val diffCallback = object : DiffUtil.ItemCallback<Book>() {
@@ -22,20 +35,52 @@ class BookAdapter : ListAdapter<Book, BookAdapter.BookViewHolder>(diffCallback) 
         }
     }
 
+    @OptIn(FlowPreview::class)
     inner class BookViewHolder(
         private val binding: ItemBookBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
         init {
             itemView.setOnClickListener {
-                adapterPosition.takeIf { pos -> pos != RecyclerView.NO_POSITION }
-                    ?.let { position ->
-                        val book = getItem(position)
-                        val isExpand = book.isExpand
+                adapterPosition.takeIf { pos ->
+                    pos != RecyclerView.NO_POSITION
+                }?.let { position ->
+                    val book = getItem(position)
+                    val isExpand = book.isExpand
 
-                        book.isExpand = !isExpand
-                        notifyItemChanged(position)
-                    }
+                    book.isExpand = !isExpand
+                    notifyItemChanged(position)
+                }
+            }
+
+            binding.ivBook.setOnClickListener {
+                adapterPosition.takeIf { pos ->
+                    pos != RecyclerView.NO_POSITION
+                }?.let { position ->
+                    onClickBook.invoke(getItem(position))
+                }
+            }
+
+            CoroutineScope(Dispatchers.Main).launch {
+                binding.ivBookmark.click()
+                    .debounce(250)
+                    .onEach {
+                        adapterPosition.takeIf { pos ->
+                            pos != RecyclerView.NO_POSITION
+                        }?.let { position ->
+                            val book = getItem(position)
+
+                            if (book.isBookmark) {
+                                binding.ivBookmark.setImageResource(R.drawable.ic_bookmark_border_24)
+                                deleteBookmark.invoke(book)
+                            } else {
+                                binding.ivBookmark.setImageResource(R.drawable.ic_bookmark_24)
+                                insertBookMark.invoke(book)
+                            }
+
+                            book.isBookmark = !book.isBookmark
+                        }
+                    }.collect()
             }
         }
 

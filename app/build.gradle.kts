@@ -53,6 +53,9 @@ dependencies {
     implementation(Library.AndroidX.ACTIVITY_KTX)
 
     implementation(Library.Hilt.ANDROID)
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.google.android.material:material:1.4.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     kapt(Library.Hilt.ANDROID_COMPILER)
 
     implementation(Library.ROOM.ROOM)

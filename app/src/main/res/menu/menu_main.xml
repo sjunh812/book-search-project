@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_bookmark"
+        android:icon="@drawable/ic_bookmark_border_white_24"
+        android:title="@string/label_bookmark"
+        app:showAsAction="ifRoom" />
+
+    <item android:id="@+id/menu_recent_search"
+        android:icon="@drawable/ic_search_24"
+        android:title="@string/label_recent_search"
+        app:showAsAction="ifRoom" />
+
+</menu>

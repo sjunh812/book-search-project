@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="book"
-            type="org.sjhstudio.flow.bookproject.domain.model.Book" />
+            name="bookmark"
+            type="org.sjhstudio.flow.bookproject.domain.model.Bookmark" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,7 +22,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:scaleType="centerInside"
-            app:imageUrl="@{book.image}"
+            app:imageUrl="@{bookmark.image}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -32,7 +32,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="@{book.title}"
+            android:text="@{bookmark.title}"
             app:layout_constraintBottom_toTopOf="@id/tv_author"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/iv_book"
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_marginTop="8dp"
-            app:author="@{book.author}"
+            app:author="@{bookmark.author}"
             app:layout_constraintBottom_toTopOf="@id/tv_discount"
             app:layout_constraintStart_toEndOf="@id/tv_author_label"
             app:layout_constraintTop_toBottomOf="@id/tv_title"
@@ -81,7 +81,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:text="@{book.publisher}"
+            android:text="@{bookmark.publisher}"
             app:layout_constraintBottom_toBottomOf="@id/tv_publisher_label"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0"
@@ -106,7 +106,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_marginTop="4dp"
-            app:discount="@{book.discount}"
+            app:discount="@{bookmark.discount}"
             app:layout_constraintBottom_toBottomOf="@id/iv_book"
             app:layout_constraintStart_toEndOf="@id/tv_discount_label"
             app:layout_constraintTop_toBottomOf="@id/tv_author"
@@ -117,8 +117,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:src="@drawable/ic_bookmark_border_24"
-            app:bookmarkImage="@{book.isBookmark}"
+            android:src="@drawable/ic_bookmark_24"
             app:layout_constraintBottom_toTopOf="@id/barrier"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -129,49 +128,5 @@
             app:barrierDirection="bottom"
             app:barrierMargin="15dp"
             app:constraint_referenced_ids="iv_book, tv_discount" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_detail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            app:detailViewVisibility="@{book.isExpand}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/barrier">
-
-            <TextView
-                android:id="@+id/tv_publish_date_label"
-                style="@style/TextAppearance.Label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_publish_date"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_publish_date"
-                style="@style/TextAppearance.Body2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                app:layout_constraintBottom_toBottomOf="@id/tv_publish_date_label"
-                app:layout_constraintStart_toEndOf="@id/tv_publish_date_label"
-                app:layout_constraintTop_toTopOf="@id/tv_publish_date_label"
-                app:publishDate="@{book.publishDate}"
-                tools:text="2022 .02 .02" />
-
-            <TextView
-                android:id="@+id/tv_description"
-                style="@style/TextAppearance.Description"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                app:description="@{book.description}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_publish_date_label"
-                tools:text="책 설명입니다." />
-        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

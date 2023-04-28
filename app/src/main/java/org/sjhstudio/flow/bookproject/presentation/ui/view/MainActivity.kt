@@ -1,10 +1,16 @@
 package org.sjhstudio.flow.bookproject.presentation.ui.view
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
@@ -12,15 +18,20 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.sjhstudio.flow.bookproject.R
 import org.sjhstudio.flow.bookproject.databinding.ActivityMainBinding
+import org.sjhstudio.flow.bookproject.domain.model.Book
 import org.sjhstudio.flow.bookproject.presentation.base.BaseActivity
 import org.sjhstudio.flow.bookproject.presentation.base.UiState
 import org.sjhstudio.flow.bookproject.presentation.ui.adapter.BookAdapter
+import org.sjhstudio.flow.bookproject.presentation.ui.common.MessageDialog
+import org.sjhstudio.flow.bookproject.presentation.ui.view.RecentSearchActivity.Companion.EXTRA_QUERY
 import org.sjhstudio.flow.bookproject.presentation.ui.viewmodel.MainViewModel
+import org.sjhstudio.flow.bookproject.presentation.util.showSnackMessage
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -30,10 +41,65 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     lateinit var imm: InputMethodManager
 
     private val viewModel: MainViewModel by viewModels()
-    private val bookAdapter by lazy { BookAdapter() }
+    private val bookAdapter by lazy {
+        BookAdapter(
+            onClickBook = { book ->
+                openBrowser(book)
+            },
+            insertBookMark = { book ->
+                viewModel.insertBookmark(book)
+                binding.root.showSnackMessage("북마크가 저장되었습니다.")
+            },
+            deleteBookmark = { book ->
+                viewModel.deleteBookmark(book)
+                binding.root.showSnackMessage("북마크가 삭제되었습니다.")
+            }
+        )
+    }
+
+    private val bookmarkLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            with(viewModel) {
+                lastBookList?.query?.let { query ->
+                    searchBook(query, 1)
+                }
+            }
+        }
+
+    private val recentSearchLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val query =
+                    result.data?.getStringExtra(EXTRA_QUERY) ?: return@registerForActivityResult
+                bookAdapter.submitList(null)
+                viewModel.searchBook(query, 1)
+                binding.etSearch.setText(query)
+            }
+        }
 
     companion object {
         private const val LOG = "MainActivity"
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        val view = currentFocus
+
+        view?.let { v ->
+            if (v is TextInputEditText && ev?.action == MotionEvent.ACTION_DOWN) {
+                val x = ev.rawX
+                val y = ev.rawY
+                val outLocation = IntArray(2)
+
+                view.getLocationOnScreen(outLocation)
+
+                if (outLocation[0] < x || outLocation[0] > x + view.width ||
+                    outLocation[1] < y || outLocation[1] > y + view.height
+                ) {
+                    clearKeyboard(view)
+                }
+            }
+        }
+        return super.dispatchTouchEvent(ev)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,10 +117,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                     etSearch.text?.also { bookName ->
                         if (bookName.trim().isNotEmpty()) {
                             bookAdapter.submitList(null)    // 어뎁터 내 리스트 초기화
-                            viewModel.searchBook(bookName.toString(), 1)
+                            viewModel.searchBook(bookName.toString(), 1)    // 검색
                         }
                     }?.run {
-                        clear() // 검색창 초기화
+//                        clear() // 검색창 초기화
                         clearKeyboard(etSearch) // 키보드 숨기기
                     }
                 }
@@ -93,17 +159,30 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         with(viewModel) {
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    bookmarkList.collectLatest { list ->
+                        // collect bookmark DB
+                        Log.e(LOG, "bookmark list : ${ list.map { it.title } }")
+                    }
+                }
+            }
+
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
                     bookList.collectLatest { uiState ->
                         when (uiState) {
                             is UiState.Loading -> {
+                                Log.e(LOG, "Loading")
                                 binding.progressBar.isVisible = true
                             }
                             is UiState.Success -> {
+                                Log.e(LOG, "Success")
                                 bookAdapter.submitList(bookAdapter.currentList + uiState.data.books)
+                                viewModel.insertRecentSearch(uiState.data.query)   // 최근 검색어 추가
                                 binding.progressBar.isVisible = false
                             }
                             is UiState.Error -> {
-                                binding.progressBar.isVisible = true
+                                Log.e(LOG, "Error")
+                                binding.progressBar.isVisible = false
                             }
                         }
                     }
@@ -113,16 +192,51 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     errorMessage.collectLatest { errorMessage ->
-                        Log.e(LOG, errorMessage.toString())
-                        // todo. 메시지 다이얼로그
+                        Log.e(LOG, "error message : ${errorMessage.toString()}")
+                        errorMessage?.let { message -> showMessageDialog(message) }
+                        initErrorMessage()
                     }
                 }
             }
         }
     }
 
+    private fun showMessageDialog(message: String) {
+        MessageDialog(
+            message = message,
+            secondButtonText = getString(R.string.button_confirm),
+            isConfirmDialog = true
+        ).run {
+            show(supportFragmentManager, tag)
+        }
+    }
+
     private fun clearKeyboard(view: View) {
         view.clearFocus()
         imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    private fun openBrowser(book: Book) {
+        if (book.link.isNotEmpty()) {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(book.link)))
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_bookmark -> {
+                bookAdapter.submitList(null)    // 어뎁터 내 리스트 초기화
+                bookmarkLauncher.launch(Intent(this, BookmarkActivity::class.java))
+            }
+            R.id.menu_recent_search -> {
+                recentSearchLauncher.launch(Intent(this, RecentSearchActivity::class.java))
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

@@ -1,16 +1,12 @@
-package org.sjhstudio.flow.bookproject.domain.model
+package org.sjhstudio.flow.bookproject.data.local.model
 
-import java.util.*
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import org.sjhstudio.flow.bookproject.domain.model.Bookmark
 
-data class BookList(
-    val query: String,
-    val total: Int,
-    val start: Int,
-    val display: Int,
-    val books: List<Book>
-)
-
-data class Book(
+@Entity(tableName = "bookmarkEntity")
+data class BookmarkEntity(
+    @PrimaryKey val isbn: String,
     val title: String,
     val link: String,
     val image: String,
@@ -18,10 +14,8 @@ data class Book(
     val discount: String,
     val publisher: String,
     val publishDate: String,
-    val isbn: String,
     val description: String,
-    var isExpand: Boolean = false,   // 상세보기 여부
-    var isBookmark: Boolean = false // 북마크 여부
+    val date: Long
 ) {
 
     fun toBookmark(): Bookmark {
@@ -35,7 +29,7 @@ data class Book(
             publisher,
             publishDate,
             description,
-            date = Date().time
+            date
         )
     }
 }
