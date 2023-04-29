@@ -58,7 +58,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     }
 
     private val bookmarkLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             with(viewModel) {
                 lastBookList?.query?.let { query ->
                     searchBook(query, 1)
@@ -99,6 +99,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                 }
             }
         }
+
         return super.dispatchTouchEvent(ev)
     }
 
@@ -116,8 +117,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     etSearch.text?.also { bookName ->
                         if (bookName.trim().isNotEmpty()) {
-                            bookAdapter.submitList(null)    // 어뎁터 내 리스트 초기화
-                            viewModel.searchBook(bookName.toString(), 1)    // 검색
+                            bookAdapter.submitList(null)
+                            viewModel.searchBook(bookName.toString(), 1)
                         }
                     }?.run {
 //                        clear() // 검색창 초기화
@@ -193,8 +194,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     errorMessage.collectLatest { errorMessage ->
                         Log.e(LOG, "error message : ${errorMessage.toString()}")
-                        errorMessage?.let { message -> showMessageDialog(message) }
-                        initErrorMessage()
+                        errorMessage?.let { message ->
+                            showMessageDialog(message)
+                            initErrorMessage()
+                        }
                     }
                 }
             }
@@ -224,19 +227,21 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
+
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_bookmark -> {
-                bookAdapter.submitList(null)    // 어뎁터 내 리스트 초기화
+                bookAdapter.submitList(null)
                 bookmarkLauncher.launch(Intent(this, BookmarkActivity::class.java))
             }
             R.id.menu_recent_search -> {
                 recentSearchLauncher.launch(Intent(this, RecentSearchActivity::class.java))
             }
         }
+
         return super.onOptionsItemSelected(item)
     }
 }

@@ -53,6 +53,7 @@ class RecentSearchActivity :
                 title = getString(R.string.label_recent_search)
                 setDisplayHomeAsUpEnabled(true)
             }
+
             rvRecentSearch.adapter = recentSearchAdapter
         }
     }
@@ -75,7 +76,7 @@ class RecentSearchActivity :
             .apply {
                 putExtra(EXTRA_QUERY, recentSearch.word)
             }
-        Log.e(LOG, "send query : ${recentSearch.word}")
+
         setResult(RESULT_OK, intent)
         finish()
     }
@@ -95,6 +96,7 @@ class RecentSearchActivity :
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_recent_search, menu)
+
         return true
     }
 
@@ -103,6 +105,7 @@ class RecentSearchActivity :
             android.R.id.home -> finish()
             R.id.menu_delete_all -> showDeleteRecentSearchDialog()
         }
+
         return super.onOptionsItemSelected(item)
     }
 }

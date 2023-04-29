@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
@@ -15,7 +14,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.sjhstudio.flow.bookproject.R
 import org.sjhstudio.flow.bookproject.databinding.ActivityBookmarkBinding
-import org.sjhstudio.flow.bookproject.domain.model.Book
 import org.sjhstudio.flow.bookproject.domain.model.Bookmark
 import org.sjhstudio.flow.bookproject.presentation.base.BaseActivity
 import org.sjhstudio.flow.bookproject.presentation.ui.adapter.BookmarkAdapter
@@ -35,7 +33,7 @@ class BookmarkActivity : BaseActivity<ActivityBookmarkBinding>(R.layout.activity
             onClickBook = { bookmark ->
                 openBrowser(bookmark)
             },
-            onClickBookmark = {bookmark ->
+            onClickBookmark = { bookmark ->
                 showDeleteBookmarkDialog(bookmark)
             }
         )
@@ -67,7 +65,7 @@ class BookmarkActivity : BaseActivity<ActivityBookmarkBinding>(R.layout.activity
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     bookmarkList.collectLatest { list ->
-                        Log.e(LOG, "bookmark list : $list")
+                        Log.e(LOG, "bookmark list : ${list.map { it.title }}")
                         bookmarkAdapter.submitList(list)
                     }
                 }
@@ -98,6 +96,7 @@ class BookmarkActivity : BaseActivity<ActivityBookmarkBinding>(R.layout.activity
         when (item.itemId) {
             android.R.id.home -> finish()
         }
+
         return super.onOptionsItemSelected(item)
     }
 }

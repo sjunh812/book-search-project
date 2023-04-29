@@ -61,7 +61,7 @@
             app:layout_constraintBottom_toTopOf="@id/tv_discount"
             app:layout_constraintStart_toEndOf="@id/tv_author_label"
             app:layout_constraintTop_toBottomOf="@id/tv_title"
-            app:layout_constraintWidth_max="150dp"
+            app:layout_constraintWidth_max="120dp"
             tools:text="홍길동" />
 
         <TextView

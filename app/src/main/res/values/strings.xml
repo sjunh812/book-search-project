@@ -14,6 +14,7 @@
     <string name="button_delete">삭제하기</string>
     <string name="button_confirm">확인</string>
 
+    <string name="description_bookmark">북마크는 최근 순서대로 최대 10개까지만 보여집니다.</string>
     <string name="description_recent_search">최근 검색어는 최대 10개까지만 보여집니다.</string>
 
     <string name="hint_search_book">책이름을 입력해주세요.</string>
