@@ -90,12 +90,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                 val y = ev.rawY
                 val outLocation = IntArray(2)
 
-                view.getLocationOnScreen(outLocation)
+                v.getLocationOnScreen(outLocation)
 
-                if (outLocation[0] < x || outLocation[0] > x + view.width ||
-                    outLocation[1] < y || outLocation[1] > y + view.height
+                if (outLocation[0] < x || outLocation[0] > x + v.width ||
+                    outLocation[1] < y || outLocation[1] > y + v.height
                 ) {
-                    clearKeyboard(view)
+                    clearKeyboard(v)
                 }
             }
         }

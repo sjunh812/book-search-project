@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="TextAppearance.Toolbar.Title" parent="TextAppearance.MaterialComponents.Headline5">
         <item name="android:textSize">22sp</item>
         <item name="android:letterSpacing">0</item>
@@ -48,5 +49,18 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:letterSpacing">0</item>
         <item name="fontFamily">@font/pretendard_medium</item>
+    </style>
+
+    <style name="TextAppearance.Chip.Choice" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textColor">@drawable/selector_chip_choice_text_color</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="fontFamily">@font/pretendard_medium</item>
+    </style>
+
+    <style name="Widget.Chip.Choice" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipStrokeColor">@drawable/selector_chip_choice_stroke</item>
+        <item name="chipBackgroundColor">@drawable/selector_chip_choice_background</item>
+        <item name="android:textAppearance">@style/TextAppearance.Chip.Choice</item>
     </style>
 </resources>
