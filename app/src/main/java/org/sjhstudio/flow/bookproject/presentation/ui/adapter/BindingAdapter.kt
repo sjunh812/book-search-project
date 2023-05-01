@@ -13,7 +13,7 @@ import org.sjhstudio.flow.bookproject.presentation.util.discountFormat
 import org.sjhstudio.flow.bookproject.presentation.util.newDateFormat
 import org.sjhstudio.flow.bookproject.presentation.util.originDateFormat
 import org.sjhstudio.flow.bookproject.presentation.util.recentSearchDateFormat
-import java.util.Date
+import java.util.*
 
 @BindingAdapter("imageUrl")
 fun ImageView.bindImageUrl(url: String?) {

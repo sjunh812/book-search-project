@@ -8,7 +8,8 @@
         android:title="@string/label_bookmark"
         app:showAsAction="ifRoom" />
 
-    <item android:id="@+id/menu_recent_search"
+    <item
+        android:id="@+id/menu_recent_search"
         android:icon="@drawable/ic_search_24"
         android:title="@string/label_recent_search"
         app:showAsAction="ifRoom" />

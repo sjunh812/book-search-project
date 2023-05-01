@@ -21,8 +21,8 @@ import org.sjhstudio.flow.bookproject.presentation.ui.common.MessageDialog
 import org.sjhstudio.flow.bookproject.presentation.ui.viewmodel.BookmarkViewModel
 
 /**
- * - MainActivity 로 부터 북마크 DB 데이터 가져올지? (x)
- * - BookmarkRepository 에 접근해서 북마크 DB 데이터 가져올지? (o) → 조회 외에도 삭제 구현 필요
+ * MainActivity 에서 북마크 DB 데이터를 가져올지? (x)
+ * BookmarkRepository 에 접근하여 북마크 DB 데이터 가져올지? (o) → 조회 외에도 삭제 구현이 필요함.
  */
 @AndroidEntryPoint
 class BookmarkActivity : BaseActivity<ActivityBookmarkBinding>(R.layout.activity_bookmark) {

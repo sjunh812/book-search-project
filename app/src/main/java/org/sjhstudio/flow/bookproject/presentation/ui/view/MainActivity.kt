@@ -64,7 +64,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             with(viewModel) {
                 lastBookList?.query?.let { query ->
-                    searchBook(query, 1, getSearchBookFilter())
+                    searchBook(query, 1, getSearchFilter())
                 }
             }
         }
@@ -75,7 +75,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                 val query =
                     result.data?.getStringExtra(EXTRA_QUERY) ?: return@registerForActivityResult
                 bookAdapter.submitList(null)
-                viewModel.searchBook(query, 1, getSearchBookFilter())
+                viewModel.searchBook(query, 1, getSearchFilter())
                 binding.etSearch.setText(query)
             }
         }
@@ -121,7 +121,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                     etSearch.text?.also { bookName ->
                         if (bookName.trim().isNotEmpty()) {
                             initBookList()
-                            viewModel.searchBook(bookName.toString(), 1, getSearchBookFilter())
+                            viewModel.searchBook(bookName.toString(), 1, getSearchFilter())
                         }
                     }?.run {
 //                        clear() // 검색창 초기화
@@ -135,7 +135,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                 Log.e(LOG, "change checked chip state")
                 initBookList()
                 if (!etSearch.text.isNullOrEmpty()) {
-                    viewModel.searchBook(etSearch.text.toString(), 1, getSearchBookFilter())
+                    viewModel.searchBook(etSearch.text.toString(), 1, getSearchFilter())
                 }
             }
 
@@ -150,7 +150,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                 addOnScrollListener(object : RecyclerView.OnScrollListener() {
                     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                         super.onScrolled(recyclerView, dx, dy)
-                        if (bookAdapter.itemCount == 0) return  // 어뎁터 내 리스트가 초기화 되는경우 예외처리
+                        if (bookAdapter.itemCount == 0) return  // 어뎁터 내 리스트가 초기화 되는 경우 예외처리
 
                         val linearLayoutManager = layoutManager as LinearLayoutManager
                         val lastPosition = linearLayoutManager.itemCount - 1
@@ -161,7 +161,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                             viewModel.lastBookList?.let { last ->
                                 val end = last.start + last.display - 1
                                 if (end < last.total) {
-                                    viewModel.searchBook(last.query, end + 1, getSearchBookFilter())
+                                    viewModel.searchBook(last.query, end + 1, getSearchFilter())
                                 }
                             }
                         }
@@ -245,7 +245,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         }
     }
 
-    private fun getSearchBookFilter(): String {
+    private fun getSearchFilter(): String {
         return when (binding.chipGroupFilter.checkedChipId) {
             R.id.chip_publish_date -> SORT_OF_PUBLISH_DATE
             else -> SORT_OF_ACCURACY
