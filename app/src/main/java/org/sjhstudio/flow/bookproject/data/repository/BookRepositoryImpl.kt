@@ -16,10 +16,11 @@ class BookRepositoryImpl @Inject constructor(
     override fun getBookList(
         query: String,
         start: Int,
+        sort: String,
         bookmarkList: List<Bookmark>
     ): Flow<UiState<BookList>> =
         flow {
-            val bookListEntity = bookDataSource.getBookList(query, start)
+            val bookListEntity = bookDataSource.getBookList(query, start, sort)
             emit(UiState.Success(bookListEntity.toBookList(query, bookmarkList)))
         }
 }

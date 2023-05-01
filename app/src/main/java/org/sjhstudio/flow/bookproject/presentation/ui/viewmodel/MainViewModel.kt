@@ -44,11 +44,11 @@ class MainViewModel @Inject constructor(
         private const val LOG = "MainViewModel"
     }
 
-    fun searchBook(query: String, start: Int) = viewModelScope.launch {
-        Log.e(LOG, "query : $query, start : $start")
+    fun searchBook(query: String, start: Int, sort: String) = viewModelScope.launch {
+        Log.e(LOG, "query : $query, start : $start, sort : $sort")
         _bookList.emit(UiState.Loading)
 
-        bookRepository.getBookList(query, start, bookmarkList.value)
+        bookRepository.getBookList(query, start, sort, bookmarkList.value)
             .onStart { }
             .onCompletion { }
             .catch { e ->

@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
             android:layout_marginTop="30dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="15dp"
             android:backgroundTint="@color/flow_600"
             android:textAppearance="@style/TextAppearance.Button"
             app:layout_constraintBottom_toBottomOf="parent"

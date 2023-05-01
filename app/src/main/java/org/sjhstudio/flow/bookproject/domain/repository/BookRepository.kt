@@ -10,6 +10,7 @@ interface BookRepository {
     fun getBookList(
         query: String,
         start: Int,
+        sort: String,
         bookmarkList: List<Bookmark>
     ): Flow<UiState<BookList>>
 }

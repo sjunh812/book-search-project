@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BookSearchProject</string>
+    <string name="app_name">플로우 채용 과제</string>
 
     <string name="label_search">검색</string>
     <string name="label_bookmark">북마크</string>

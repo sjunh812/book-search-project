@@ -8,15 +8,15 @@ import javax.inject.Inject
 
 interface BookDataSource {
 
-    suspend fun getBookList(query: String, start: Int): BookListEntity
+    suspend fun getBookList(query: String, start: Int, sort: String): BookListEntity
 }
 
 class BookDataSourceImpl @Inject constructor(
     private val bookService: BookService
 ) : BookDataSource {
 
-    override suspend fun getBookList(query: String, start: Int): BookListEntity {
-        val response = bookService.getBookList(query, start)
+    override suspend fun getBookList(query: String, start: Int, sort: String): BookListEntity {
+        val response = bookService.getBookList(query, start, sort)
 
         if (response.isSuccessful) {
             return response.body()

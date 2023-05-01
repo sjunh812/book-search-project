@@ -18,6 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -31,6 +32,8 @@ import org.sjhstudio.flow.bookproject.presentation.ui.adapter.BookAdapter
 import org.sjhstudio.flow.bookproject.presentation.ui.common.MessageDialog
 import org.sjhstudio.flow.bookproject.presentation.ui.view.RecentSearchActivity.Companion.EXTRA_QUERY
 import org.sjhstudio.flow.bookproject.presentation.ui.viewmodel.MainViewModel
+import org.sjhstudio.flow.bookproject.presentation.util.Constants.SORT_OF_ACCURACY
+import org.sjhstudio.flow.bookproject.presentation.util.Constants.SORT_OF_PUBLISH_DATE
 import org.sjhstudio.flow.bookproject.presentation.util.showSnackMessage
 import javax.inject.Inject
 
@@ -61,7 +64,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             with(viewModel) {
                 lastBookList?.query?.let { query ->
-                    searchBook(query, 1)
+                    searchBook(query, 1, getSearchBookFilter())
                 }
             }
         }
@@ -72,7 +75,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                 val query =
                     result.data?.getStringExtra(EXTRA_QUERY) ?: return@registerForActivityResult
                 bookAdapter.submitList(null)
-                viewModel.searchBook(query, 1)
+                viewModel.searchBook(query, 1, getSearchBookFilter())
                 binding.etSearch.setText(query)
             }
         }
@@ -117,8 +120,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     etSearch.text?.also { bookName ->
                         if (bookName.trim().isNotEmpty()) {
-                            bookAdapter.submitList(null)
-                            viewModel.searchBook(bookName.toString(), 1)
+                            initBookList()
+                            viewModel.searchBook(bookName.toString(), 1, getSearchBookFilter())
                         }
                     }?.run {
 //                        clear() // 검색창 초기화
@@ -128,9 +131,21 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                 false
             }
 
+            chipGroupFilter.setOnCheckedStateChangeListener { _, _ ->
+                Log.e(LOG, "change checked chip state")
+                initBookList()
+                if (!etSearch.text.isNullOrEmpty()) {
+                    viewModel.searchBook(etSearch.text.toString(), 1, getSearchBookFilter())
+                }
+            }
+
             rvBook.apply {
                 adapter = bookAdapter
-                itemAnimator = null
+                itemAnimator.takeIf { animator ->
+                    animator is SimpleItemAnimator
+                }?.let { animator ->
+                    (animator as SimpleItemAnimator).supportsChangeAnimations = false
+                }
 
                 addOnScrollListener(object : RecyclerView.OnScrollListener() {
                     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -146,7 +161,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                             viewModel.lastBookList?.let { last ->
                                 val end = last.start + last.display - 1
                                 if (end < last.total) {
-                                    viewModel.searchBook(last.query, end + 1)
+                                    viewModel.searchBook(last.query, end + 1, getSearchBookFilter())
                                 }
                             }
                         }
@@ -162,7 +177,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     bookmarkList.collectLatest { list ->
                         // collect bookmark DB
-                        Log.e(LOG, "bookmark list : ${ list.map { it.title } }")
+                        Log.e(LOG, "bookmark list : ${list.map { it.title }}")
                     }
                 }
             }
@@ -219,9 +234,21 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
+    private fun initBookList() {
+        bookAdapter.submitList(null)
+        viewModel.lastBookList = null
+    }
+
     private fun openBrowser(book: Book) {
         if (book.link.isNotEmpty()) {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(book.link)))
+        }
+    }
+
+    private fun getSearchBookFilter(): String {
+        return when (binding.chipGroupFilter.checkedChipId) {
+            R.id.chip_publish_date -> SORT_OF_PUBLISH_DATE
+            else -> SORT_OF_ACCURACY
         }
     }
 
